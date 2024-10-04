@@ -10,6 +10,8 @@ This work enabled me to quickly write a CLI tool to help me convert. I'm not a n
 
 That also means that sometimes I go nuts trying to select the proper const/var/let assignment, the code just works for me atm.
 
+the example ini file included is obfusciated and cleaned up of any internal info that would not be nice to be leaked.
+
 # usage
 
 Usage: node mobaconv.js [options]

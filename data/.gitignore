@@ -3,3 +3,4 @@
 
 # Allow the directory itself by keeping this .gitignore file
 !.gitignore
+!moba.ini
