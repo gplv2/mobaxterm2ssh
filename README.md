@@ -14,6 +14,7 @@ the example ini file included is obfusciated and cleaned up of any internal info
 
 # usage
 
+```
 Usage: node mobaconv.js [options]
 
 Options:
@@ -22,4 +23,4 @@ Options:
   --outputfile <file>           The target ssh config file, defaults to sshconfigfile if omited
   --replaceuser <old/new> Replace a username with another one everywhere (proxy and ssh user)
   --help                        Show help information
-
+```
