@@ -1,0 +1,5 @@
+# Ignore everything inside the 'data' directory
+*
+
+# Allow the directory itself by keeping this .gitignore file
+!.gitignore

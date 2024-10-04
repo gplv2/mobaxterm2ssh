@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "inireader": "^2.2.1",
+    "ssh-config": "^5.0.0"
+  }
+}
