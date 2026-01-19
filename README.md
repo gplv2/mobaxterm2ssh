@@ -1,21 +1,29 @@
 # mobaxterm2ssh
 
-Convert MobaxTerm and SuperPutty session configurations to OpenSSH `~/.ssh/config` format.
+Convert session configurations between MobaxTerm, SuperPutty, and OpenSSH formats.
 
 ## Supported Formats
 
+### Input Formats
 | Format | File Types | Description |
 |--------|------------|-------------|
 | MobaxTerm | `.ini`, `.mxtsessions` | Windows terminal emulator session exports |
 | SuperPutty | `.xml` (Sessions.xml) | PuTTY session manager exports |
 
+### Output Formats
+| Format | Description |
+|--------|-------------|
+| sshconfig | OpenSSH `~/.ssh/config` format |
+| superputty | SuperPutty `Sessions.xml` format |
+
 ## Features
 
 - Auto-detects input format based on file extension
-- Preserves folder hierarchy as comments in SSH config
+- Bidirectional conversion between formats
+- Preserves folder hierarchy
 - Extracts jump host / ProxyJump settings (MobaxTerm)
-- Parses PuTTY command-line args from ExtraArgs (SuperPutty)
-- Merges with existing SSH config (preserves your current entries)
+- Parses PuTTY command-line args (SuperPutty)
+- Merges with existing SSH config
 - Creates timestamped backups before overwriting
 - Supports username replacement across all sessions
 
@@ -35,42 +43,41 @@ Options:
                             Defaults to ./data/
   --format <type>           Input format: auto (default), mobaxterm, superputty
                             'auto' detects based on file extensions
-  --sshconfigfile <file>    Source SSH config file to merge with
+  --output-format <type>    Output format: sshconfig (default), superputty
+  --sshconfigfile <file>    Source SSH config file to merge with (sshconfig output only)
                             Defaults to ~/.ssh/config
-  --outputfile <file>       Target SSH config file
-                            Defaults to --sshconfigfile value
+  --outputfile <file>       Target output file
+                            Defaults to ~/.ssh/config (sshconfig) or Sessions.xml (superputty)
   --replaceuser <old/new>   Replace a username everywhere (proxy and SSH user)
   --help                    Show help information
 ```
 
 ## Examples
 
-### Convert MobaxTerm sessions
+### MobaxTerm to SSH config (default)
 ```bash
-# Auto-detect format from .ini files in ./data/
-node mobaconv.js
-
-# Specify input directory
-node mobaconv.js --datadir /path/to/exports/
+node mobaconv.js --datadir ./sessions/
 ```
 
-### Convert SuperPutty sessions
+### MobaxTerm to SuperPutty
 ```bash
-# Auto-detect from .xml files
-node mobaconv.js --datadir /path/to/superputty/
-
-# Explicitly specify format
-node mobaconv.js --datadir ./sessions/ --format superputty
+node mobaconv.js --datadir ./data/ --output-format superputty --outputfile Sessions.xml
 ```
 
-### Write to a different output file
+### SuperPutty to SSH config
 ```bash
-node mobaconv.js --outputfile ./my-ssh-config
+node mobaconv.js --datadir ./data/ --format superputty
 ```
 
-### Replace usernames during conversion
+### SuperPutty to MobaxTerm (via SuperPutty output)
 ```bash
-node mobaconv.js --replaceuser olduser/newuser
+# First convert SuperPutty to another SuperPutty file (for reorganization)
+node mobaconv.js --datadir ./old-sessions/ --output-format superputty --outputfile new-sessions.xml
+```
+
+### With username replacement
+```bash
+node mobaconv.js --datadir ./data/ --replaceuser olduser/newuser
 ```
 
 ## Input File Locations
@@ -84,10 +91,9 @@ node mobaconv.js --replaceuser olduser/newuser
 - Sessions database: `%USERPROFILE%/Documents/SuperPuTTY/Sessions.xml`
 - Or via: File > Export Sessions
 
-## Output Format
+## Output Examples
 
-The tool generates standard OpenSSH config entries:
-
+### SSH Config Output
 ```
 ###  Production/Web Servers
 # nginx01
@@ -99,12 +105,23 @@ Host 192.168.1.10
   ForwardAgent yes
 ```
 
+### SuperPutty XML Output
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSessionData>
+  <SessionData SessionId="Production/Web Servers/nginx01" SessionName="nginx01"
+               Host="192.168.1.10" Port="22" Proto="SSH" Username="admin"
+               PuttySession="Default Settings" ExtraArgs="-A" Note="" />
+</ArrayOfSessionData>
+```
+
 ## Running Tests
 
 ```bash
-npm test              # Run SuperPutty parser tests
-npm run test:all      # Run all tests
-npm run test:mobaxterm # Run MobaxTerm parser tests
+npm test                  # Run all tests
+npm run test:superputty   # Run SuperPutty parser tests
+npm run test:mobaxterm    # Run MobaxTerm parser tests
+npm run test:generator    # Run SuperPutty generator tests
 ```
 
 ## Format Documentation

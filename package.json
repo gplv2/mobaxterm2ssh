@@ -1,13 +1,14 @@
 {
   "name": "mobaxterm2ssh",
-  "version": "2.0.0",
-  "description": "Convert MobaxTerm and SuperPutty session configs to OpenSSH config format",
+  "version": "2.1.0",
+  "description": "Convert session configs between MobaxTerm, SuperPutty, and OpenSSH formats",
   "main": "mobaconv.js",
   "scripts": {
-    "test": "node test/superputty.test.js",
-    "test:all": "node test/superputty.test.js && node test/mobaxterm.test.js",
+    "test": "node test/superputty.test.js && node test/mobaxterm.test.js && node test/superputty-generator.test.js",
+    "test:all": "npm test",
     "test:superputty": "node test/superputty.test.js",
-    "test:mobaxterm": "node test/mobaxterm.test.js"
+    "test:mobaxterm": "node test/mobaxterm.test.js",
+    "test:generator": "node test/superputty-generator.test.js"
   },
   "dependencies": {
     "fast-xml-parser": "^4.3.2",
